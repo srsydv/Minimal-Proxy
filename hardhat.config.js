@@ -5,7 +5,7 @@ require("dotenv").config();
 module.exports = {
   solidity: "0.8.10",
   networks: {
-    gorli: {
+    bscTestnet: {
       url: process.env.GORLI_URL,
       accounts: [process.env.GORLI_PRIVATE_KEY]
     }

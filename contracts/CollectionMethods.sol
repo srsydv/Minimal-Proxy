@@ -3,9 +3,10 @@ pragma solidity 0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import "./Libraries/LibCollection.sol";
 import "./utils/LibShare.sol";
@@ -17,7 +18,7 @@ contract CollectionMethods is
 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
-    address poolOwner;
+    address collectionOwner;
     address piNFTAddress;
 
     // tokenId => collection royalties
@@ -57,14 +58,14 @@ contract CollectionMethods is
     );
 
     function initialize(
-        address _poolOwner,
+        address _collectionOwner,
         address _piNFTAddress,
         string memory _name,
         string memory _symbol
     ) external initializer {
         __ERC721_init(_name, _symbol);
         __ERC721URIStorage_init();
-        poolOwner = _poolOwner;
+        collectionOwner = _collectionOwner;
         piNFTAddress = _piNFTAddress;
     }
 
@@ -78,7 +79,10 @@ contract CollectionMethods is
 
     // mints an ERC721 token to _to with _uri as token uri
     function mintNFT(address _to, string memory _uri) public returns (uint256) {
-        require(msg.sender == poolOwner, "You are not the collection Owner");
+        require(
+            msg.sender == collectionOwner,
+            "You are not the collection Owner"
+        );
         require(_to != address(0), "You can't mint with 0 address");
         uint256 tokenId_ = _tokenIdCounter.current();
         _safeMint(_to, tokenId_);

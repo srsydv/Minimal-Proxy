@@ -33,7 +33,7 @@ contract CollectionFactory {
 
     event SetDescription(uint256 collectionId, string Description);
 
-    event SetSymble(uint256 collectionId, string Symble);
+    event SetSymbol(uint256 collectionId, string Symbol);
 
     event CollectionCreated(uint256 collectionId, address CollectionAddress);
 
@@ -42,10 +42,10 @@ contract CollectionFactory {
         LibShare.Share[] indexed royalties
     );
 
-    address public collectionImplemantation;
+    address collectionMethodAddress;
 
-    constructor(address _collectionImplemantation) {
-        collectionImplemantation = _collectionImplemantation;
+    constructor(address _collectionMethodAddress) {
+        collectionMethodAddress = _collectionMethodAddress;
     }
 
     modifier collectionOwner(uint256 _collectionId) {
@@ -72,7 +72,7 @@ contract CollectionFactory {
             address(this),
             _name,
             _symbol,
-            collectionImplemantation
+            collectionMethodAddress
         );
 
         CollectionMeta memory details = CollectionMeta(
@@ -140,7 +140,7 @@ contract CollectionFactory {
         }
     }
 
-    function setCollectionSymble(uint256 _collectionId, string memory _symbol)
+    function setCollectionSymbol(uint256 _collectionId, string memory _symbol)
         public
         collectionOwner(_collectionId)
     {
@@ -150,7 +150,7 @@ contract CollectionFactory {
         ) {
             collections[_collectionId].symbol = _symbol;
 
-            emit SetSymble(_collectionId, _symbol);
+            emit SetSymbol(_collectionId, _symbol);
         }
     }
 

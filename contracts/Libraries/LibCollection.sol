@@ -10,16 +10,15 @@ library LibCollection {
         address _piNFT,
         string memory _name,
         string memory _symbol,
-        address _collectionImplemantation
+        address _collectionMethods
     ) external returns (address) {
-        address instance = Clones.clone(_collectionImplemantation);
-        CollectionMethods(instance).initialize(
+        address tokenAddress = Clones.clone(_collectionMethods);
+        CollectionMethods(tokenAddress).initialize(
             _collectionOwner,
             _piNFT,
             _name,
             _symbol
         );
-
-        return address(instance);
+        return address(tokenAddress);
     }
 }
